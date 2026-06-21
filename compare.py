@@ -27,10 +27,10 @@ def compare_files(file1, file2):
     df1 = normalize_dataframe(df1)
     df2 = normalize_dataframe(df2)
 
+
     # Use first column as primary key
     pk1 = df1.columns[0]
     pk2 = df2.columns[0]
-
 
     # Set index
     df1 = df1.set_index(pk1)
@@ -43,17 +43,16 @@ def compare_files(file1, file2):
     ids1 = set(df1.index)
     ids2 = set(df2.index)
 
+    added_ids = ids2 - ids1
+    deleted_ids = ids1 - ids2
+    common_ids = ids1.intersection(ids2)
+
     column_info = match_columns(
         list(df1.columns),
         list(df2.columns)
     )
 
     column_mapping = column_info["mapping"]
-
-    added_ids = ids2 - ids1
-    deleted_ids = ids1 - ids2
-    common_ids = ids1.intersection(ids2)
-
     # ------------------
     # Added rows
     # ------------------
@@ -115,6 +114,8 @@ def compare_files(file1, file2):
                 "id": row_id,
                 "changes": changes
             })
+
+    column_mapping = {pk1: pk2, **column_mapping}
 
     return {
         "file1_name": file1_name,
