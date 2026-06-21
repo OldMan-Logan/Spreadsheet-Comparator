@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+pandas
+openpyxl
+python-multipart
+jinja2
+rapidfuzz
+openpyxl
+xlrd
+pyxlsb
+odfpy
