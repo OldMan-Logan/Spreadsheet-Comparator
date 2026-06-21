@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Results</title>
+</head>
+
+<body>
+
+<h1>Comparison Results</h1>
+
+<h2>Uploaded Files</h2>
+
+<table border="1">
+
+<tr>
+    <th></th>
+    <th>Name</th>
+    <th>Type</th>
+</tr>
+
+<tr>
+    <td>File A</td>
+    <td>{{ result.file1_name }}</td>
+    <td>{{ result.file1_type }}</td>
+</tr>
+
+<tr>
+    <td>File B</td>
+    <td>{{ result.file2_name }}</td>
+    <td>{{ result.file2_type }}</td>
+</tr>
+
+</table>
+
+<br>
+<hr>
+
+<h2>Primary Keys</h2>
+
+<p>
+File A: {{ result.primary_key_a }}
+</p>
+
+<p>
+File B: {{ result.primary_key_b }}
+</p>
+
+<br>
+<hr>
+
+<h2>Column Mapping</h2>
+
+<table border="1">
+
+<tr>
+    <th>File A</th>
+    <th>File B</th>
+</tr>
+
+{% for col_a, col_b in result.column_mapping.items() %}
+
+<tr>
+    <td>{{ col_a }}</td>
+    <td>{{ col_b }}</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+<br>
+<hr>
+
+<h2>Columns Missing in File B</h2>
+
+{% if result.missing_columns %}
+
+<ul>
+
+{% for col in result.missing_columns %}
+<li>{{ col }}</li>
+{% endfor %}
+
+</ul>
+
+{% else %}
+
+<p>None</p>
+
+{% endif %}
+
+<br>
+<hr>
+
+<h2>New Columns Found in File B</h2>
+
+{% if result.new_columns %}
+
+<ul>
+
+{% for col in result.new_columns %}
+<li>{{ col }}</li>
+{% endfor %}
+
+</ul>
+
+{% else %}
+
+<p>None</p>
+
+{% endif %}
+
+<br>
+<hr>
+
+<h2>
+Added Rows in File B
+</h2>
+
+{% if result.added %}
+
+<table border="1">
+
+<tr>
+
+{% for col in result.added[0].keys() %}
+<th>{{ col }}</th>
+{% endfor %}
+
+</tr>
+
+{% for row in result.added %}
+
+<tr>
+
+{% for val in row.values() %}
+<td>{{ val }}</td>
+{% endfor %}
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+{% else %}
+
+<p>None</p>
+
+{% endif %}
+
+<br>
+<hr>
+
+<h2>
+Deleted Rows in File B
+</h2>
+
+{% if result.deleted %}
+
+<table border="1">
+
+<tr>
+
+{% for col in result.deleted[0].keys() %}
+<th>{{ col }}</th>
+{% endfor %}
+
+</tr>
+
+{% for row in result.deleted %}
+
+<tr>
+
+{% for val in row.values() %}
+<td>{{ val }}</td>
+{% endfor %}
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+{% else %}
+
+<p>None</p>
+
+{% endif %}
+
+<br>
+<hr>
+
+<h2>
+Modified Rows
+</h2>
+
+<table border="1">
+
+<tr>
+    <th>ID</th>
+    <th>Column</th>
+    <th>Old Value</th>
+    <th>New Value</th>
+</tr>
+
+{% for row in result.modified %}
+
+    {% for col,change in row.changes.items() %}
+
+    <tr>
+
+        <td>{{ row.id }}</td>
+
+        <td>{{ col }}</td>
+
+        <td>{{ change.old }}</td>
+
+        <td>{{ change.new }}</td>
+
+    </tr>
+
+    {% endfor %}
+
+{% endfor %}
+
+</table>
+
+<br>
+<br>
+
+</body>
+
+</html>
