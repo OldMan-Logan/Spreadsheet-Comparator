@@ -1,234 +1,373 @@
 <!DOCTYPE html>
+
 <html>
 
 <head>
-    <title>Results</title>
+
+
+<title>Comparison Results</title>
+
+<link rel="stylesheet" href="/static/style.css">
+
+
 </head>
 
 <body>
 
+<div class="container">
+
+<a href="/" class="back-btn">
+    ← Compare Another Pair
+</a>
+
 <h1>Comparison Results</h1>
 
-<h2>Uploaded Files</h2>
+<div class="summary-grid">
 
-<table border="1">
+    <div class="summary-card">
+        <h3>Added Rows</h3>
+        <h2>{{ result.added_count }}</h2>
+    </div>
 
-<tr>
-    <th></th>
-    <th>Name</th>
-    <th>Type</th>
-</tr>
+    <div class="summary-card">
+        <h3>Deleted Rows</h3>
+        <h2>{{ result.deleted_count }}</h2>
+    </div>
 
-<tr>
-    <td>File A</td>
-    <td>{{ result.file1_name }}</td>
-    <td>{{ result.file1_type }}</td>
-</tr>
+    <div class="summary-card">
+        <h3>Modified Rows</h3>
+        <h2>{{ result.modified_count }}</h2>
+    </div>
 
-<tr>
-    <td>File B</td>
-    <td>{{ result.file2_name }}</td>
-    <td>{{ result.file2_type }}</td>
-</tr>
+</div>
 
-</table>
+<!-- COLUMN MAPPING -->
 
-<br>
-<hr>
+<div class="section">
 
-<h2>Primary Keys</h2>
+    <button class="accordion-btn">
 
-<p>
-File A: {{ result.primary_key_a }}
-</p>
+        Column Mapping
 
-<p>
-File B: {{ result.primary_key_b }}
-</p>
+        <span class="count-badge">
+            {{ result.column_mapping|length }}
+        </span>
 
-<br>
-<hr>
+    </button>
 
-<h2>Column Mapping</h2>
+    <div class="accordion-content">
 
-<table border="1">
+        <table>
 
-<tr>
-    <th>File A</th>
-    <th>File B</th>
-</tr>
+            <tr>
+                <th>{{ result.file1_name }}</th>
+                <th>{{ result.file2_name }}</th>
+            </tr>
 
-{% for col_a, col_b in result.column_mapping.items() %}
+            {% for a,b in result.column_mapping.items() %}
 
-<tr>
-    <td>{{ col_a }}</td>
-    <td>{{ col_b }}</td>
-</tr>
+            <tr>
+                <td>{{ a }}</td>
+                <td>{{ b }}</td>
+            </tr>
 
-{% endfor %}
+            {% endfor %}
 
-</table>
+        </table>
 
-<br>
-<hr>
+    </div>
 
-<h2>Columns Missing in File B</h2>
+</div>
 
-{% if result.missing_columns %}
+<!-- MISSING COLUMNS -->
 
-<ul>
+<div class="section">
 
-{% for col in result.missing_columns %}
-<li>{{ col }}</li>
-{% endfor %}
+    <button class="accordion-btn">
 
-</ul>
+        Missing Columns
 
-{% else %}
+        <span class="count-badge">
+            {{ result.missing_columns|length }}
+        </span>
 
-<p>None</p>
+    </button>
 
-{% endif %}
+    <div class="accordion-content">
 
-<br>
-<hr>
+        {% if result.missing_columns %}
 
-<h2>New Columns Found in File B</h2>
+            <div class="column-grid">
 
-{% if result.new_columns %}
+            {% for col in result.missing_columns %}
 
-<ul>
+            <div class="column-card missing">
 
-{% for col in result.new_columns %}
-<li>{{ col }}</li>
-{% endfor %}
+            {{ col }}
 
-</ul>
+            </div>
 
-{% else %}
+            {% endfor %}
 
-<p>None</p>
+            </div>
 
-{% endif %}
+        {% else %}
 
-<br>
-<hr>
+            <div class="badge-none">
+                ✅ No Missing Columns
+            </div>
 
-<h2>
-Added Rows in File B
-</h2>
+        {% endif %}
 
-{% if result.added %}
+    </div>
 
-<table border="1">
+</div>
 
-<tr>
+<!-- NEW COLUMNS -->
 
-{% for col in result.added[0].keys() %}
-<th>{{ col }}</th>
-{% endfor %}
+<div class="section">
 
-</tr>
+    <button class="accordion-btn">
 
-{% for row in result.added %}
+        New Columns
 
-<tr>
+        <span class="count-badge">
+            {{ result.new_columns|length }}
+        </span>
 
-{% for val in row.values() %}
-<td>{{ val }}</td>
-{% endfor %}
+    </button>
 
-</tr>
+    <div class="accordion-content">
 
-{% endfor %}
+        {% if result.new_columns %}
 
-</table>
+            <div class="column-grid">
 
-{% else %}
+            {% for col in result.new_columns %}
 
-<p>None</p>
+            <div class="column-card added">
 
-{% endif %}
+            {{ col }}
 
-<br>
-<hr>
+            </div>
 
-<h2>
-Deleted Rows in File B
-</h2>
+            {% endfor %}
 
-{% if result.deleted %}
+            </div>
 
-<table border="1">
+        {% else %}
 
-<tr>
+            <div class="badge-none">
+                ✅ No New Columns
+            </div>
 
-{% for col in result.deleted[0].keys() %}
-<th>{{ col }}</th>
-{% endfor %}
+        {% endif %}
 
-</tr>
+    </div>
 
-{% for row in result.deleted %}
+</div>
 
-<tr>
+<!-- ADDED ROWS -->
 
-{% for val in row.values() %}
-<td>{{ val }}</td>
-{% endfor %}
+<div class="section">
 
-</tr>
+    <button class="accordion-btn">
 
-{% endfor %}
+        Added Rows
 
-</table>
+        <span class="count-badge">
+            {{ result.added_count }}
+        </span>
 
-{% else %}
+    </button>
 
-<p>None</p>
+    <div class="accordion-content">
 
-{% endif %}
+        {% if result.added %}
 
-<br>
-<hr>
+        <table>
 
-<h2>
-Modified Rows
-</h2>
+            <tr>
 
-<table border="1">
+            {% for col in result.added[0].keys() %}
+                <th>{{ col }}</th>
+            {% endfor %}
 
-<tr>
-    <th>ID</th>
-    <th>Column</th>
-    <th>Old Value</th>
-    <th>New Value</th>
-</tr>
+            </tr>
 
-{% for row in result.modified %}
+            {% for row in result.added %}
 
-    {% for col,change in row.changes.items() %}
+            <tr>
 
-    <tr>
+                {% for value in row.values() %}
+                <td>{{ value }}</td>
+                {% endfor %}
 
-        <td>{{ row.id }}</td>
+            </tr>
 
-        <td>{{ col }}</td>
+            {% endfor %}
 
-        <td>{{ change.old }}</td>
+        </table>
 
-        <td>{{ change.new }}</td>
+        {% else %}
 
-    </tr>
+        <div class="badge-none">
+            ✅ No Added Rows
+        </div>
 
-    {% endfor %}
+        {% endif %}
 
-{% endfor %}
+    </div>
 
-</table>
+</div>
 
-<br>
-<br>
+<!-- DELETED ROWS -->
+
+<div class="section">
+
+    <button class="accordion-btn">
+
+        Deleted Rows
+
+        <span class="count-badge">
+            {{ result.deleted_count }}
+        </span>
+
+    </button>
+
+    <div class="accordion-content">
+
+        {% if result.deleted %}
+
+        <table>
+
+            <tr>
+
+            {% for col in result.deleted[0].keys() %}
+                <th>{{ col }}</th>
+            {% endfor %}
+
+            </tr>
+
+            {% for row in result.deleted %}
+
+            <tr>
+
+                {% for value in row.values() %}
+                <td>{{ value }}</td>
+                {% endfor %}
+
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+        {% else %}
+
+        <div class="badge-none">
+            ✅ No Deleted Rows
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+<!-- MODIFIED ROWS -->
+
+<div class="section">
+
+    <button class="accordion-btn">
+
+        Modified Rows
+
+        <span class="count-badge">
+            {{ result.modified_count }}
+        </span>
+
+    </button>
+
+    <div class="accordion-content">
+
+        {% if result.modified %}
+
+        <table>
+
+            <tr>
+                <th>ID</th>
+                <th>Column</th>
+                <th>Old Value</th>
+                <th>New Value</th>
+            </tr>
+
+            {% for row in result.modified %}
+
+                {% for col,change in row.changes.items() %}
+
+                <tr>
+
+                    <td class="old-value">{{ row.id }}</td>
+
+                    <td class="new-value">{{ col }}</td>
+
+                    <td class="old-value">
+                        {{ change.old }}
+                    </td>
+
+                    <td class="new-value">
+                        {{ change.new }}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            {% endfor %}
+
+        </table>
+
+        {% else %}
+
+        <div class="badge-none">
+            ✅ No Modified Rows
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+</div>
+
+<script>
+
+const accordions =
+document.querySelectorAll(
+".accordion-btn"
+);
+
+accordions.forEach(btn=>{
+
+    btn.addEventListener(
+        "click",
+        ()=>{
+
+            const content =
+            btn.nextElementSibling;
+
+            content.classList.toggle(
+                "active"
+            );
+
+        }
+    );
+
+});
+
+</script>
 
 </body>
 
