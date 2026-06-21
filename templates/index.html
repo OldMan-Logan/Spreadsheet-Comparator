@@ -2,47 +2,216 @@
 <html>
 
 <head>
-    <title>Spreadsheet Comparator</title>
+
+<title>Spreadsheet Comparator</title>
+
+<link rel="stylesheet"
+href="/static/style.css">
+
 </head>
 
 <body>
 
+<div class="container">
+
+<div class="hero">
+
 <h1>Spreadsheet Comparator</h1>
 
+<p>
+Compare CSV, XLSX, XLS, XLSM, XLSB, ODS and other spreadsheet files
+</p>
+
+</div>
+
 <form
-    action="/compare"
-    method="post"
-    enctype="multipart/form-data"
+action="/compare"
+method="post"
+enctype="multipart/form-data"
 >
 
-    <p>Spreadsheet 1</p>
+<div class="upload-section">
 
-    <input
-        type="file"
-        name="file1"
-        accept=".csv,.xlsx,.xls,.xlsm,.xlsb,.ods,.xml,.tsv,.txt"
-        required
-    >
+<div
+class="drop-zone"
+id="dropzone1"
+>
 
-    <br><br>
+<div class="drop-zone-text">
 
-    <p>Spreadsheet 2</p>
+📄 File A
 
-    <input
-        type="file"
-        name="file2"
-        accept=".csv,.xlsx,.xls,.xlsm,.xlsb,.ods,.xml,.tsv,.txt"
-        required
-    >
+<br><br>
 
-    <br><br>
+<p class="filename">
+     No file selected
+</p>
 
-    <button type="submit">
-        Compare
-    </button>
+<br>
+
+Drag & Drop
+
+or Click to Upload
+
+</div>
+
+</div>
+
+<input
+type="file"
+id="file1"
+name="file1"
+accept=".csv,.xlsx,.xls,.xlsm,.xlsb,.ods,.xml,.txt,.tsv"
+hidden
+required
+>
+
+<div
+class="drop-zone"
+id="dropzone2"
+>
+
+<div class="drop-zone-text">
+
+📄 File B
+
+<br><br>
+
+<p class="filename">
+     No file selected
+</p>
+
+<br>
+
+Drag & Drop
+
+or Click to Upload
+
+</div>
+
+</div>
+
+<input
+type="file"
+id="file2"
+name="file2"
+accept=".csv,.xlsx,.xls,.xlsm,.xlsb,.ods,.xml,.txt,.tsv"
+hidden
+required
+>
+
+</div>
+
+<button
+type="submit"
+class="compare-btn"
+>
+Compare Files
+</button>
 
 </form>
 
-</body>
+</div>
 
+<div id="loading-overlay">
+
+<div class="loader"></div>
+
+<p>
+
+Comparing spreadsheets...
+
+</p>
+
+</div>
+
+<script>
+
+function setupDropzone(
+dropzoneId,
+inputId
+){
+
+const dz =
+document.getElementById(dropzoneId);
+
+const input =
+document.getElementById(inputId);
+
+dz.onclick=()=>input.click();
+
+input.addEventListener(
+"change",
+()=>{
+if(input.files.length){
+
+dz.querySelector(".filename").textContent =
+"✅ " + input.files[0].name;
+
+}
+}
+);
+
+dz.addEventListener(
+"dragover",
+e=>{
+e.preventDefault();
+dz.classList.add("dragover");
+}
+);
+
+dz.addEventListener(
+"dragleave",
+()=>{
+dz.classList.remove("dragover");
+}
+);
+
+dz.addEventListener(
+"drop",
+e=>{
+
+e.preventDefault();
+
+dz.classList.remove(
+"dragover"
+);
+
+input.files=
+e.dataTransfer.files;
+
+dz.querySelector(".filename").textContent =
+"✅ " + e.dataTransfer.files[0].name;
+
+}
+);
+
+}
+
+setupDropzone(
+"dropzone1",
+"file1"
+);
+
+setupDropzone(
+"dropzone2",
+"file2"
+);
+
+document.querySelector(
+"form"
+).addEventListener(
+"submit",
+function(){
+
+document.getElementById(
+"loading-overlay"
+).style.display="flex";
+
+}
+);
+
+</script>
+
+</body>
 </html>
